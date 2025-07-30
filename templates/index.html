@@ -4,10 +4,13 @@
     <title>Рандомайзер групп</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+        body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: auto; }
         textarea, input, button { width: 100%; padding: 10px; margin-top: 10px; font-size: 16px; }
-        .group { margin-top: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 10px; }
-        .group h3 { margin: 0 0 10px 0; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: center; vertical-align: top; }
+        th { background-color: #f2f2f2; }
+        button { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
     </style>
 </head>
 <body>
@@ -22,16 +25,33 @@
 
     {% if result %}
         <h2>Результат:</h2>
-        {% for group in result %}
-            <div class="group">
-                <h3>Группа {{ loop.index }}</h3>
-                <ul>
-                    {% for name, number in group %}
-                        <li>{{ name }} — №{{ number }}</li>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        {% for group in result %}
+                            <th>Группа {{ loop.index }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set max_len = result | map('length') | max %}
+                    {% for i in range(max_len) %}
+                        <tr>
+                            {% for group in result %}
+                                <td>
+                                    {% if group | length > i %}
+                                        {{ group[i][0] }} — №{{ group[i][1] }}
+                                    {% else %}
+                                        &nbsp;
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
                     {% endfor %}
-                </ul>
-            </div>
-        {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% endif %}
 </body>
 </html>
